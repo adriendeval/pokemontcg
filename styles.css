@@ -11,8 +11,9 @@ body {
 
 .card img {
     border-radius: 10px;
-    object-fit: cover;
+    object-fit: contain; /* Affiche toute la carte */
     height: 300px;
+    width: 100%;
 }
 
 .card-title, .card-text {
@@ -29,6 +30,7 @@ body {
     font-weight: bold;
     color: white;
     border-radius: 15px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.6); /* Ombre */
 }
 
 /* Couleurs des tags selon le prix */
