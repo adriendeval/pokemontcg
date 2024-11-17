@@ -52,18 +52,54 @@ function displayResults(cards) {
             else priceClass = "price-high";
         }
 
+        const releaseYear = card.set?.releaseDate?.split("-")[0] || "Inconnu";
+
         cardElement.innerHTML = `
             <div class="card">
                 <div class="price-tag ${priceClass}">${averagePrice ? averagePrice.toFixed(2) + " €" : "Non dispo"}</div>
-                <img src="${card.images.large}" class="card-img-top" alt="${card.name}">
+                <img src="${card.images.large}" class="card-img-top" alt="${card.name}" data-bs-toggle="modal" data-bs-target="#cardModal" data-card='${JSON.stringify(
+            card
+        )}'>
                 <div class="card-body">
                     <h5 class="card-title">${card.name}</h5>
                     <p class="card-text">Extension : ${card.set?.name || "Inconnu"}</p>
                     <p class="card-text">Illustrateur : ${card.artist || "Non disponible"}</p>
-                    <p class="card-text">Année de sortie : ${card.set?.releaseDate || "Non disponible"}</p>
+                    <p class="card-text">Année de sortie : ${releaseYear}</p>
                 </div>
             </div>
         `;
         resultsDiv.appendChild(cardElement);
+    });
+
+    // Ajoute l'événement pour ouvrir le modal
+    addModalEvents();
+}
+
+// Gestion du modal
+function addModalEvents() {
+    const images = document.querySelectorAll("[data-bs-toggle='modal']");
+    images.forEach((img) => {
+        img.addEventListener("click", (event) => {
+            const card = JSON.parse(event.target.getAttribute("data-card"));
+            const modalContent = document.getElementById("modal-content");
+
+            const releaseYear = card.set?.releaseDate?.split("-")[0] || "Inconnu";
+
+            modalContent.innerHTML = `
+                <div class="text-center">
+                    <img src="${card.images.large}" class="img-fluid mb-3" alt="${card.name}">
+                    <h3>${card.name}</h3>
+                    <p><strong>Extension :</strong> ${card.set?.name || "Inconnu"}</p>
+                    <p><strong>Illustrateur :</strong> ${card.artist || "Non disponible"}</p>
+                    <p><strong>Année de sortie :</strong> ${releaseYear}</p>
+                    <p><strong>Rare :</strong> ${card.rarity || "Inconnu"}</p>
+                    <p><strong>Prix moyen :</strong> ${
+                        card.cardmarket?.prices?.averageSellPrice
+                            ? card.cardmarket.prices.averageSellPrice.toFixed(2) + " €"
+                            : "Non disponible"
+                    }</p>
+                </div>
+            `;
+        });
     });
 }
