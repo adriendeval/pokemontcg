@@ -57,9 +57,7 @@ function displayResults(cards) {
         cardElement.innerHTML = `
             <div class="card">
                 <div class="price-tag ${priceClass}">${averagePrice ? averagePrice.toFixed(2) + " €" : "Non dispo"}</div>
-                <img src="${card.images.large}" class="card-img-top" alt="${card.name}" data-bs-toggle="modal" data-bs-target="#cardModal" data-card='${JSON.stringify(
-            card
-        )}'>
+                <img src="${card.images.large}" class="card-img-top modal-trigger" alt="${card.name}" data-card-id="${card.id}">
                 <div class="card-body">
                     <h5 class="card-title">${card.name}</h5>
                     <p class="card-text">Extension : ${card.set?.name || "Inconnu"}</p>
@@ -71,35 +69,48 @@ function displayResults(cards) {
         resultsDiv.appendChild(cardElement);
     });
 
-    // Ajoute l'événement pour ouvrir le modal
-    addModalEvents();
+    // Ajoute les événements pour ouvrir le modal
+    addModalEvents(cards);
 }
 
-// Gestion du modal
-function addModalEvents() {
-    const images = document.querySelectorAll("[data-bs-toggle='modal']");
-    images.forEach((img) => {
-        img.addEventListener("click", (event) => {
-            const card = JSON.parse(event.target.getAttribute("data-card"));
-            const modalContent = document.getElementById("modal-content");
+// Gestion des événements pour le modal
+function addModalEvents(cards) {
+    const modalTriggers = document.querySelectorAll(".modal-trigger");
+    modalTriggers.forEach((trigger) => {
+        trigger.addEventListener("click", (event) => {
+            const cardId = event.target.getAttribute("data-card-id");
+            const card = cards.find((c) => c.id === cardId);
 
-            const releaseYear = card.set?.releaseDate?.split("-")[0] || "Inconnu";
-
-            modalContent.innerHTML = `
-                <div class="text-center">
-                    <img src="${card.images.large}" class="img-fluid mb-3" alt="${card.name}">
-                    <h3>${card.name}</h3>
-                    <p><strong>Extension :</strong> ${card.set?.name || "Inconnu"}</p>
-                    <p><strong>Illustrateur :</strong> ${card.artist || "Non disponible"}</p>
-                    <p><strong>Année de sortie :</strong> ${releaseYear}</p>
-                    <p><strong>Rare :</strong> ${card.rarity || "Inconnu"}</p>
-                    <p><strong>Prix moyen :</strong> ${
-                        card.cardmarket?.prices?.averageSellPrice
-                            ? card.cardmarket.prices.averageSellPrice.toFixed(2) + " €"
-                            : "Non disponible"
-                    }</p>
-                </div>
-            `;
+            if (card) {
+                populateModal(card);
+            }
         });
     });
+}
+
+// Contenu du modal
+function populateModal(card) {
+    const modalContent = document.getElementById("modal-content");
+
+    const releaseYear = card.set?.releaseDate?.split("-")[0] || "Inconnu";
+
+    modalContent.innerHTML = `
+        <div class="text-center">
+            <img src="${card.images.large}" class="img-fluid mb-3" alt="${card.name}">
+            <h3>${card.name}</h3>
+            <p><strong>Extension :</strong> ${card.set?.name || "Inconnu"}</p>
+            <p><strong>Illustrateur :</strong> ${card.artist || "Non disponible"}</p>
+            <p><strong>Année de sortie :</strong> ${releaseYear}</p>
+            <p><strong>Rare :</strong> ${card.rarity || "Inconnu"}</p>
+            <p><strong>Prix moyen :</strong> ${
+                card.cardmarket?.prices?.averageSellPrice
+                    ? card.cardmarket.prices.averageSellPrice.toFixed(2) + " €"
+                    : "Non disponible"
+            }</p>
+        </div>
+    `;
+
+    // Affiche le modal
+    const modal = new bootstrap.Modal(document.getElementById("cardModal"));
+    modal.show();
 }
