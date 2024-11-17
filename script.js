@@ -40,19 +40,27 @@ function displayResults(cards) {
 
     cards.forEach((card) => {
         const cardElement = document.createElement("div");
-        cardElement.classList.add("col-md-4");
+        cardElement.classList.add("col-6", "col-lg-5");
+
+        // Calcul de la couleur du tag selon le prix
+        const averagePrice = card.cardmarket?.prices?.averageSellPrice || null;
+        let priceClass = "price-default";
+
+        if (averagePrice) {
+            if (averagePrice <= 10) priceClass = "price-low";
+            else if (averagePrice <= 50) priceClass = "price-medium";
+            else priceClass = "price-high";
+        }
 
         cardElement.innerHTML = `
             <div class="card">
+                <div class="price-tag ${priceClass}">${averagePrice ? averagePrice.toFixed(2) + " €" : "Non dispo"}</div>
                 <img src="${card.images.large}" class="card-img-top" alt="${card.name}">
                 <div class="card-body">
                     <h5 class="card-title">${card.name}</h5>
-                    <p class="card-text">Rare: ${card.rarity || "Inconnu"}</p>
-                    <p class="card-text">Prix estimé: ${
-                        card.cardmarket?.prices?.averageSellPrice
-                            ? card.cardmarket.prices.averageSellPrice + " €"
-                            : "Non disponible"
-                    }</p>
+                    <p class="card-text">Extension : ${card.set?.name || "Inconnu"}</p>
+                    <p class="card-text">Illustrateur : ${card.artist || "Non disponible"}</p>
+                    <p class="card-text">Année de sortie : ${card.set?.releaseDate || "Non disponible"}</p>
                 </div>
             </div>
         `;
