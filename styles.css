@@ -6,12 +6,52 @@ body {
     background-color: #2c2c2c;
     border: none;
     color: white;
+    position: relative;
 }
 
 .card img {
     border-radius: 10px;
+    object-fit: cover;
+    height: 300px;
 }
 
 .card-title, .card-text {
     color: #ddd;
+}
+
+/* Tag pour le prix */
+.price-tag {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    padding: 5px 10px;
+    font-size: 14px;
+    font-weight: bold;
+    color: white;
+    border-radius: 15px;
+}
+
+/* Couleurs des tags selon le prix */
+.price-low {
+    background-color: #28a745; /* Vert */
+}
+
+.price-medium {
+    background-color: #ffc107; /* Jaune */
+}
+
+.price-high {
+    background-color: #dc3545; /* Rouge */
+}
+
+.price-default {
+    background-color: #343a40; /* Gris foncé */
+}
+
+/* Responsive grid */
+@media (min-width: 992px) {
+    .col-lg-5 {
+        flex: 0 0 auto;
+        width: 20%;
+    }
 }
