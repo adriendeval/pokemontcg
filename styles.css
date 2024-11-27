@@ -11,7 +11,7 @@ body {
 
 .card img {
     border-radius: 10px;
-    object-fit: contain; /* Affiche toute la carte */
+    object-fit: contain;
     height: 300px;
     width: 100%;
 }
@@ -20,7 +20,6 @@ body {
     color: #ddd;
 }
 
-/* Tag pour le prix */
 .price-tag {
     position: absolute;
     top: 10px;
@@ -30,30 +29,6 @@ body {
     font-weight: bold;
     color: white;
     border-radius: 15px;
+    background-color: #343a40;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.6); /* Ombre */
-}
-
-/* Couleurs des tags selon le prix */
-.price-low {
-    background-color: #28a745; /* Vert */
-}
-
-.price-medium {
-    background-color: #ffc107; /* Jaune */
-}
-
-.price-high {
-    background-color: #dc3545; /* Rouge */
-}
-
-.price-default {
-    background-color: #343a40; /* Gris foncé */
-}
-
-/* Responsive grid */
-@media (min-width: 992px) {
-    .col-lg-5 {
-        flex: 0 0 auto;
-        width: 20%;
-    }
 }
