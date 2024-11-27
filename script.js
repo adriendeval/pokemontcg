@@ -2,37 +2,36 @@ const API_URL = "https://api.tcgdex.dev/v2/";
 
 document.getElementById("search-form").addEventListener("submit", async (event) => {
     event.preventDefault();
-    const cardName = document.getElementById("card-name").value.trim();
+    const cardName = document.getElementById("card-name").value.trim().toLowerCase();
     const language = document.getElementById("language-select").value;
     const resultsDiv = document.getElementById("results");
 
     resultsDiv.innerHTML = "<p>Chargement...</p>";
 
     try {
-        // Requête vers l'API avec le nom et la langue
-        const response = await fetch(`${API_URL}${language}/cards?q=${encodeURIComponent(cardName)}`);
-        
-        // Vérifions si la réponse est correcte
+        // Récupérer toutes les cartes pour la langue choisie
+        const response = await fetch(`${API_URL}${language}/cards`);
         if (!response.ok) {
-            throw new Error(`Erreur API : ${response.statusText}`);
+            throw new Error(`Erreur API : ${response.status} ${response.statusText}`);
         }
 
         const data = await response.json();
 
-        // Vérifions si des résultats existent
-        if (!data || data.length === 0) {
-            resultsDiv.innerHTML = "<p>Aucune carte trouvée.</p>";
-            return;
-        }
+        // Filtrer les cartes par nom (côté client)
+        const filteredCards = data.filter(card => card.name.toLowerCase().includes(cardName));
 
-        displayResults(data);
+        // Afficher les résultats
+        if (filteredCards.length === 0) {
+            resultsDiv.innerHTML = "<p>Aucune carte trouvée.</p>";
+        } else {
+            displayResults(filteredCards);
+        }
     } catch (error) {
         resultsDiv.innerHTML = `<p class="text-danger">Erreur : ${error.message}</p>`;
         console.error(error);
     }
 });
 
-// Affichage des résultats
 function displayResults(cards) {
     const resultsDiv = document.getElementById("results");
     resultsDiv.innerHTML = "";
@@ -60,7 +59,6 @@ function displayResults(cards) {
     addModalEvents(cards);
 }
 
-// Gestion des modals pour afficher plus de détails
 function addModalEvents(cards) {
     const modalTriggers = document.querySelectorAll(".modal-trigger");
     modalTriggers.forEach((trigger) => {
