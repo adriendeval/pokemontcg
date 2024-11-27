@@ -5,13 +5,19 @@ const API_URL = "https://api.pokemontcg.io/v2/cards";
 document.getElementById("search-form").addEventListener("submit", async (event) => {
     event.preventDefault();
     const cardName = document.getElementById("card-name").value.trim();
+    const language = document.getElementById("language-select").value;
     const resultsDiv = document.getElementById("results");
 
     resultsDiv.innerHTML = "<p>Chargement...</p>";
 
     try {
-        // Requête API
-        const response = await fetch(`${API_URL}?q=name:"${cardName}"`, {
+        // Construction de la requête avec filtre de langue
+        let query = `name:"${cardName}"`;
+        if (language) {
+            query += ` AND set.local: "${language}"`;
+        }
+
+        const response = await fetch(`${API_URL}?q=${query}`, {
             headers: {
                 "X-Api-Key": API_KEY,
             },
@@ -42,7 +48,6 @@ function displayResults(cards) {
         const cardElement = document.createElement("div");
         cardElement.classList.add("col-6", "col-lg-5");
 
-        // Calcul de la couleur du tag selon le prix
         const averagePrice = card.cardmarket?.prices?.averageSellPrice || null;
         let priceClass = "price-default";
 
