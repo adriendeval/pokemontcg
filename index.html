@@ -12,11 +12,20 @@
     <div class="container py-5">
         <h1 class="text-center mb-4">Recherche de Cartes Pokémon</h1>
         <form id="search-form" class="mb-4">
-            <div class="input-group">
-                <input type="text" id="card-name" class="form-control" placeholder="Nom de la carte Pokémon" required>
-                <button type="submit" class="btn btn-primary">Rechercher</button>
-            </div>
-        </form>
+    <div class="input-group mb-3">
+        <input type="text" id="card-name" class="form-control" placeholder="Nom de la carte Pokémon" required>
+        <button type="submit" class="btn btn-primary">Rechercher</button>
+    </div>
+    <div class="form-group">
+        <label for="language-select">Choisissez la langue :</label>
+        <select id="language-select" class="form-select">
+            <option value="">Toutes les langues</option>
+            <option value="fr">Français</option>
+            <option value="en">Anglais</option>
+            <option value="ja">Japonais</option>
+        </select>
+    </div>
+</form>
         <div id="results" class="row g-4"></div>
     </div>
 
